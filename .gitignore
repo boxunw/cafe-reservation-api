@@ -1,0 +1,17 @@
+# OS X
+.DS_Store
+*.DS_Store
+
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+
+# image upload directories
+temp/
+upload/
