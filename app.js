@@ -4,9 +4,9 @@ const { apis } = require('./routes')
 
 const app = express()
 const port = process.env.PORT || 3000
-const db = require('./models') // 暫時引入，測試完可刪
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(methodOverride('_method'))
 
 app.use('/api', apis)
