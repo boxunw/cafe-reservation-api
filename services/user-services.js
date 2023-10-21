@@ -8,6 +8,7 @@ const userServices = {
         if (user) {
           const error = new Error('The email has already been registered!')
           error.statusCode = 409
+          error.isExpected = true
           throw error
         }
         return bcrypt.hash(password, 10)
@@ -22,7 +23,14 @@ const userServices = {
         delete newUser.password
         return cb(null, newUser)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error('Error:', err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = userServices
