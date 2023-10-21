@@ -17,7 +17,13 @@ const userController = {
       error.statusCode = 422
       throw error
     }
-    userServices.signUp(req, (err, data) => err ? next(err) : res.json({ ...data }))
+    userServices.signUp(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Registration successful!',
+        ...data
+      }))
   }
 }
 module.exports = userController
