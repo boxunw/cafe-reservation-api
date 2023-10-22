@@ -24,6 +24,15 @@ const userController = {
         message: 'Registration successful!',
         ...data
       }))
+  },
+  login: (req, res, next) => {
+    userServices.login(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Login successful!',
+        ...data
+      }))
   }
 }
 module.exports = userController
