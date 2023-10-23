@@ -76,6 +76,22 @@ const userServices = {
         return cb(null, user)
       })
       .catch(err => cb(err))
+  },
+  getUser: (req, cb) => {
+    const userId = req.params.id
+    return User.findByPk(userId, {
+      attributes: ['id', 'name', 'email'],
+      raw: true
+    })
+      .then(user => {
+        if (!user) {
+          const error = new Error('Account does not exist!')
+          error.statusCode = 404
+          throw error
+        }
+        return cb(null, user)
+      })
+      .catch(err => cb(err))
   }
 }
 module.exports = userServices

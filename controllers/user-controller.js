@@ -65,6 +65,20 @@ const userController = {
         message: 'Editing successful!',
         ...data
       }))
+  },
+  getUser: (req, res, next) => {
+    const userId = req.params.id
+    if (Number(userId) !== getUser(req).id) {
+      const error = new Error("Only able to get the logged-in user's own account data!")
+      error.statusCode = 403
+      throw error
+    }
+    userServices.getUser(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        ...data
+      }))
   }
 }
 module.exports = userController
