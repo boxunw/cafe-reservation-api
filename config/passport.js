@@ -21,7 +21,6 @@ passport.use(new LocalStrategy(
         if (!user) {
           const error = new Error('Account does not exist!')
           error.statusCode = 404
-          error.isExpected = true
           return cb(error, false)
         }
         bcrypt.compare(password, user.password)
@@ -29,7 +28,6 @@ passport.use(new LocalStrategy(
             if (!res) {
               const error = new Error('Incorrect password entered!')
               error.statusCode = 401
-              error.isExpected = true
               return cb(error, false)
             }
             return cb(null, user)

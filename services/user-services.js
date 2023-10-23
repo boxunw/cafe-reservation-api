@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { Op } = require('sequelize')
 const { User } = require('../models')
 const { getUser } = require('../helpers/auth-helper')
 const userServices = {
@@ -10,7 +11,6 @@ const userServices = {
         if (user) {
           const error = new Error('The email has already been registered!')
           error.statusCode = 409
-          error.isExpected = true
           throw error
         }
         return bcrypt.hash(password, 10)
@@ -36,6 +36,46 @@ const userServices = {
     } catch (err) {
       return cb(err)
     }
+  },
+  putAccount: (req, cb) => {
+    const userId = req.params.id
+    const { name, email, password } = req.body
+    return User.findByPk(userId)
+      .then(async user => {
+        if (!user) {
+          const error = new Error('Account does not exist!')
+          error.statusCode = 404
+          throw error
+        }
+        const user1 = await User.findOne({
+          where: {
+            [Op.and]: [
+              { email },
+              { id: { [Op.ne]: userId } }
+            ]
+          }
+        })
+        return [user, user1]
+      })
+      .then(([user, user1]) => {
+        if (user1) {
+          const error = new Error('The email has already been registered!')
+          error.statusCode = 409
+          throw error
+        }
+        return user.update({
+          name,
+          email,
+          password: password ? bcrypt.hashSync(password, 10) : user.password
+        })
+      })
+      .then(user => {
+        user = user.toJSON()
+        delete user.password
+        delete user.role
+        return cb(null, user)
+      })
+      .catch(err => cb(err))
   }
 }
 module.exports = userServices
