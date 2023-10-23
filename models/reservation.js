@@ -6,18 +6,19 @@ module.exports = (sequelize, DataTypes) => {
   class Reservation extends Model {
     static associate(models) {
       // define association here
+      Reservation.belongsTo(models.User, {
+        foreignKey: 'userId'
+      })
       Reservation.belongsTo(models.Table, {
         foreignKey: 'tableId'
       })
     }
   }
   Reservation.init({
+    userId: DataTypes.INTEGER,
     tableId: DataTypes.INTEGER,
     date: DataTypes.STRING,
-    customer: DataTypes.STRING,
-    gender: DataTypes.STRING,
     tel: DataTypes.STRING,
-    email: DataTypes.STRING,
     note: DataTypes.TEXT
   }, {
     sequelize,

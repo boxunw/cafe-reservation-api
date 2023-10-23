@@ -9,22 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        type: Sequelize.INTEGER
+      },
       table_id: {
         type: Sequelize.INTEGER
       },
       date: {
         type: Sequelize.STRING
       },
-      customer: {
-        type: Sequelize.STRING
-      },
-      gender: {
-        type: Sequelize.STRING
-      },
       tel: {
-        type: Sequelize.STRING
-      },
-      email: {
         type: Sequelize.STRING
       },
       note: {
