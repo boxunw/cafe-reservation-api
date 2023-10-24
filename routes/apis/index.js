@@ -19,6 +19,8 @@ router.post('/login', passport.authenticate('local', { session: false }), authen
 
 router.get('/times', timeController.getTimes)
 router.get('/cities', cityController.getCities)
+
+router.post('/admin/login', passport.authenticate('local', { session: false }), authenticatedAdmin, userController.login)
 router.use('/admin', authenticated, authenticatedAdmin, admin)
 router.use('/cafes', authenticated, authenticatedUser, cafes)
 router.use('/favorites', authenticated, authenticatedUser, favorites)
