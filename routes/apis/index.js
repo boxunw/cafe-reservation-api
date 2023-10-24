@@ -5,8 +5,9 @@ const admin = require('./modules/admin')
 const cafes = require('./modules/cafes')
 const favorites = require('./modules/favorites')
 const tables = require('./modules/tables')
-const reservations = require('.modules/reservations')
+const reservations = require('./modules/reservations')
 const userController = require('../../controllers/user-controller')
+const timeController = require('../../controllers/time-controller')
 const apiErrorHandler = require('../../middleware/error-handler')
 const { authenticated, authenticatedUser, authenticatedAdmin } = require('../../middleware/auth')
 
@@ -15,7 +16,9 @@ router.get('/users/:id', authenticated, authenticatedUser, userController.getUse
 router.post('/signup', userController.signUp)
 router.post('/login', passport.authenticate('local', { session: false }), authenticatedUser, userController.login)
 
-router.user('/admin', authenticated, authenticatedAdmin, admin)
+router.get('/times', timeController.getTimes)
+
+router.use('/admin', authenticated, authenticatedAdmin, admin)
 router.use('/cafes', authenticated, authenticatedUser, cafes)
 router.use('/favorites', authenticated, authenticatedUser, favorites)
 router.use('/tables', authenticated, authenticatedUser, tables)
