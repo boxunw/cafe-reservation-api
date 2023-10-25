@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     address: DataTypes.STRING,
     tel: DataTypes.STRING,
-    photo1: DataTypes.STRING,
-    photo2: DataTypes.STRING,
-    photo3: DataTypes.STRING,
-    photo4: DataTypes.STRING,
-    photo5: DataTypes.STRING
+    menu1: DataTypes.STRING,
+    menu2: DataTypes.STRING,
+    menu3: DataTypes.STRING,
+    menu4: DataTypes.STRING,
+    menu5: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Cafe',

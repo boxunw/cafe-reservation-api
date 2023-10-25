@@ -33,19 +33,19 @@ module.exports = {
       tel: {
         type: Sequelize.STRING
       },
-      photo1: {
+      menu1: {
         type: Sequelize.STRING
       },
-      photo2: {
+      menu2: {
         type: Sequelize.STRING
       },
-      photo3: {
+      menu3: {
         type: Sequelize.STRING
       },
-      photo4: {
+      menu4: {
         type: Sequelize.STRING
       },
-      photo5: {
+      menu5: {
         type: Sequelize.STRING
       },
       created_at: {
