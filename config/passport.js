@@ -21,6 +21,7 @@ passport.use(new LocalStrategy(
         if (!user) {
           const error = new Error('Account does not exist!')
           error.statusCode = 404
+          error.isExpected = true
           return cb(error, false)
         }
         bcrypt.compare(password, user.password)
@@ -28,12 +29,20 @@ passport.use(new LocalStrategy(
             if (!res) {
               const error = new Error('Incorrect password entered!')
               error.statusCode = 401
+              error.isExpected = true
               return cb(error, false)
             }
             return cb(null, user)
           })
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 ))
 
@@ -45,7 +54,11 @@ const jwtOptions = {
 passport.use(new JWTStrategy(jwtOptions, (jwtPayload, cb) => {
   User.findByPk(jwtPayload.id)
     .then(user => cb(null, user))
-    .catch(err => cb(err))
+    .catch(err => {
+      console.error(err.message)
+      const genericError = new Error('An internal server error occurred!')
+      return cb(genericError)
+    })
 }))
 
 module.exports = passport

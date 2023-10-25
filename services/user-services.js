@@ -11,6 +11,7 @@ const userServices = {
         if (user) {
           const error = new Error('The email has already been registered!')
           error.statusCode = 409
+          error.isExpected = true
           throw error
         }
         return bcrypt.hash(password, 10)
@@ -25,7 +26,14 @@ const userServices = {
         delete newUser.password
         return cb(null, newUser)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   },
   login: (req, cb) => {
     try {
@@ -34,7 +42,9 @@ const userServices = {
       userData.token = token
       return cb(null, userData)
     } catch (err) {
-      return cb(err)
+      console.error(err.message)
+      const genericError = new Error('An internal server error occurred!')
+      return cb(genericError)
     }
   },
   putAccount: (req, cb) => {
@@ -45,6 +55,7 @@ const userServices = {
         if (!user) {
           const error = new Error('Account does not exist!')
           error.statusCode = 404
+          error.isExpected = true
           throw error
         }
         const user1 = await User.findOne({
@@ -61,6 +72,7 @@ const userServices = {
         if (user1) {
           const error = new Error('The email has already been registered!')
           error.statusCode = 409
+          error.isExpected = true
           throw error
         }
         return user.update({
@@ -75,7 +87,14 @@ const userServices = {
         delete user.role
         return cb(null, user)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   },
   getUser: (req, cb) => {
     const userId = req.params.id
@@ -87,11 +106,19 @@ const userServices = {
         if (!user) {
           const error = new Error('Account does not exist!')
           error.statusCode = 404
+          error.isExpected = true
           throw error
         }
         return cb(null, user)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = userServices

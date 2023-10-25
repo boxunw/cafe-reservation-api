@@ -6,7 +6,11 @@ const cityServices = {
         const newCities = cities.map(c => c.city)
         return cb(null, newCities)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = cityServices
