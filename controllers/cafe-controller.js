@@ -64,6 +64,11 @@ const cafeController = {
         message: 'Editing successful!',
         ...data
       }))
+  },
+  getAllCafes: (req, res, next) => {
+    cafeServices.getAllCafes(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = cafeController

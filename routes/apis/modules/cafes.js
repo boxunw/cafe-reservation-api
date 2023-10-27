@@ -13,5 +13,6 @@ const uploadImages = upload.fields([
 
 router.put('/:id', uploadImages, cafeController.putCafe)
 router.post('/', uploadImages, cafeController.postCafe)
+router.get('/', cafeController.getAllCafes)
 
 module.exports = router
