@@ -1,4 +1,4 @@
-const { Cafe, City } = require('../models')
+const { Cafe, City, User } = require('../models')
 const { getUser } = require('../helpers/auth-helper')
 const imgurFileHandler = require('../helpers/file-helpers')
 const cafeServices = {
@@ -124,11 +124,11 @@ const cafeServices = {
   },
   getAllCafes: (req, cb) => {
     return Cafe.findAll({
-      include: City,
       attributes: ['id', 'name', 'cover', 'intro'],
+      include: City,
       order: [['createdAt', 'DESC']],
-      nest: true,
-      raw: true
+      raw: true,
+      nest: true
     })
       .then(cafes => {
         const newCafes = cafes.map(cafe => ({
@@ -140,7 +140,42 @@ const cafeServices = {
         }))
         return cb(null, newCafes)
       })
-      .catch(err => cb(err))
+      .catch(err => {
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  getCafe: (req, cb) => {
+    const cafeId = req.params.id
+    return Cafe.findByPk(cafeId, {
+      attributes: ['id', 'name', 'cover', 'description', 'address', 'tel', 'menu1', 'menu2', 'menu3', 'menu4', 'menu5'],
+      include: [City, { model: User, as: 'FavoritedUsers' }]
+    })
+      .then(cafe => {
+        if (!cafe) {
+          const error = new Error('The coffee shop does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        const newCafe = {
+          ...cafe.toJSON(),
+          city: cafe.City.city,
+          isFavorited: cafe.FavoritedUsers.some(f => f.id === getUser(req).id)
+        }
+        delete newCafe.City
+        delete newCafe.FavoritedUsers
+        return cb(null, newCafe)
+      })
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = cafeServices

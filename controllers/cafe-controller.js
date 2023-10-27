@@ -69,6 +69,14 @@ const cafeController = {
     cafeServices.getAllCafes(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  getCafe: (req, res, next) => {
+    cafeServices.getCafe(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        ...data
+      }))
   }
 }
 module.exports = cafeController

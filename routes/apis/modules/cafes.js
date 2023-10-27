@@ -12,6 +12,7 @@ const uploadImages = upload.fields([
 ])
 
 router.put('/:id', uploadImages, cafeController.putCafe)
+router.get('/:id', cafeController.getCafe)
 router.post('/', uploadImages, cafeController.postCafe)
 router.get('/', cafeController.getAllCafes)
 
