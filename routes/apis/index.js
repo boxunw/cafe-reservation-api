@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('../../config/passport')
 const admin = require('./modules/admin')
+const times = require('./modules/times')
 const cafes = require('./modules/cafes')
 const favorites = require('./modules/favorites')
 const tables = require('./modules/tables')
@@ -18,11 +19,14 @@ router.get('/users/:id', authenticated, authenticatedUser, userController.getUse
 router.post('/signup', userController.signUp)
 router.post('/login', loginHandler, passport.authenticate('local', { session: false }), authenticatedUser, userController.login)
 
-router.get('/times', timeController.getTimes)
 router.get('/cities', cityController.getCities)
 
 router.post('/admin/login', loginHandler, passport.authenticate('local', { session: false }), authenticatedAdmin, userController.login)
 router.use('/admin', authenticated, authenticatedAdmin, admin)
+
+router.get('/times/timeslots', timeController.getTimeslots)
+router.get('/times', authenticated, authenticatedUser, times)
+
 router.use('/cafes', authenticated, authenticatedUser, cafes)
 router.use('/favorites', authenticated, authenticatedUser, favorites)
 router.use('/tables', authenticated, authenticatedUser, tables)
