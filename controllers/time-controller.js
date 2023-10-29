@@ -3,7 +3,6 @@ const timeServices = require('../services/time-services')
 const timeController = {
   getTimeslots: (req, res, next) => {
     try {
-      console.log(timeslots)
       res.json(timeslots)
     } catch (err) {
       console.error(err.message)
