@@ -6,12 +6,13 @@ module.exports = (sequelize, DataTypes) => {
   class Time extends Model {
     static associate(models) {
       // define association here
-      Time.hasMany(models.Table, {
-        foreignKey: 'timeId'
+      Time.belongsTo(models.Cafe, {
+        foreignKey: 'cafeId'
       })
     }
   }
   Time.init({
+    cafeId: DataTypes.INTEGER,
     timeslot: DataTypes.STRING
   }, {
     sequelize,

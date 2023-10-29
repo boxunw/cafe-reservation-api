@@ -12,10 +12,10 @@ module.exports = {
       cafe_id: {
         type: Sequelize.INTEGER
       },
-      time_id: {
+      seat: {
         type: Sequelize.INTEGER
       },
-      seat: {
+      count: {
         type: Sequelize.INTEGER
       },
       created_at: {

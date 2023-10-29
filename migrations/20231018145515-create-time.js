@@ -9,6 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      cafe_id: {
+        type: Sequelize.INTEGER
+      },
       timeslot: {
         type: Sequelize.STRING
       },

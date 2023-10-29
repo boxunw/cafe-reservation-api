@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       Table.belongsTo(models.Cafe, {
         foreignKey: 'cafeId'
       })
-      Table.belongsTo(models.Time, {
-        foreignKey: 'timeId'
-      })
       Table.hasMany(models.Reservation, {
         foreignKey: 'tableId'
       })
@@ -19,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Table.init({
     cafeId: DataTypes.INTEGER,
-    timeId: DataTypes.INTEGER,
-    seat: DataTypes.INTEGER
+    seat: DataTypes.INTEGER,
+    count: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Table',
