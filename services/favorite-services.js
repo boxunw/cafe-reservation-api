@@ -40,6 +40,34 @@ const favoriteServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  deleteFavorite: (req, cb) => {
+    const { cafeId } = req.params
+    const userId = getUser(req).id
+    return Favorite.findOne({
+      where: {
+        userId,
+        cafeId
+      }
+    })
+      .then(favorite => {
+        if (!favorite) {
+          const error = new Error('You have not favorited this cafe!')
+          error.statusCode = 422
+          error.isExpected = true
+          throw error
+        }
+        return favorite.destroy()
+      })
+      .then(() => cb(null))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = favoriteServices
