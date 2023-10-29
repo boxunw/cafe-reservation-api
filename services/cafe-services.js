@@ -176,6 +176,29 @@ const cafeServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  getOwnCafes: (req, cb) => {
+    const userId = getUser(req).id
+    return Cafe.findAll({
+      where: { userId },
+      attributes: ['id', 'name', 'cover', 'intro'],
+      include: City,
+      raw: true,
+      nest: true
+    })
+      .then(cafes => {
+        const newCafes = cafes.map(cafe => {
+          cafe.city = cafe.City.city
+          delete cafe.City
+          return cafe
+        })
+        return cb(null, newCafes)
+      })
+      .catch(err => {
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = cafeServices

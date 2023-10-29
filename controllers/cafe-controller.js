@@ -77,6 +77,11 @@ const cafeController = {
         status: 'success',
         ...data
       }))
+  },
+  getOwnCafes: (req, res, next) => {
+    cafeServices.getOwnCafes(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = cafeController
