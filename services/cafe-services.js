@@ -183,6 +183,7 @@ const cafeServices = {
       where: { userId },
       attributes: ['id', 'name', 'cover', 'intro'],
       include: City,
+      order: [['createdAt', 'DESC']],
       raw: true,
       nest: true
     })
