@@ -23,7 +23,7 @@ router.post('/login', loginHandler, passport.authenticate('local', { session: fa
 router.get('/cities', cityController.getCities)
 
 router.get('/times/timeslots', timeController.getTimeslots)
-router.get('/times', authenticated, authenticatedUser, times)
+router.use('/times', authenticated, authenticatedUser, times)
 
 router.get('/tables/seats', tableController.getSeats)
 router.use('/tables', authenticated, authenticatedUser, tables)
