@@ -1,4 +1,4 @@
-const { Cafe, Favorite } = require('../models')
+const { Cafe, Favorite, User, City } = require('../models')
 const { getUser } = require('../helpers/auth-helper')
 const favoriteServices = {
   postFavorite: (req, cb) => {
@@ -64,6 +64,35 @@ const favoriteServices = {
         if (err.isExpected) {
           return cb(err)
         }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  getFavoriteCafes: (req, cb) => {
+    const userId = getUser(req).id
+    return User.findByPk(userId, {
+      include: [{
+        model: Cafe,
+        as: 'FavoritedCafes',
+        attributes: ['id', 'name', 'cover', 'intro'],
+        order: [['createdAt', 'DESC']],
+        include: { model: City }
+      }]
+    })
+      .then(user => {
+        const cafes = user.toJSON().FavoritedCafes.map(fc => {
+          return {
+            id: fc.id,
+            name: fc.name,
+            cover: fc.cover,
+            intro: fc.intro,
+            city: fc.City.city
+          }
+        })
+        return cb(null, cafes)
+      })
+      .catch(err => {
         console.error(err.message)
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)

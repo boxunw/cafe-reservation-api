@@ -19,12 +19,8 @@ router.put('/users/:id/account', authenticated, authenticatedUser, userControlle
 router.get('/users/:id', authenticated, authenticatedUser, userController.getUser)
 router.post('/signup', userController.signUp)
 router.post('/login', loginHandler, passport.authenticate('local', { session: false }), userController.login)
-// router.post('/login', loginHandler, passport.authenticate('local', { session: false }), authenticatedUser, userController.login)
 
 router.get('/cities', cityController.getCities)
-
-// router.post('/admin/login', loginHandler, passport.authenticate('local', { session: false }), authenticatedAdmin, userController.login)
-router.use('/admin', authenticated, authenticatedAdmin, admin)
 
 router.get('/times/timeslots', timeController.getTimeslots)
 router.get('/times', authenticated, authenticatedUser, times)
@@ -32,6 +28,7 @@ router.get('/times', authenticated, authenticatedUser, times)
 router.get('/tables/seats', tableController.getSeats)
 router.use('/tables', authenticated, authenticatedUser, tables)
 
+router.use('/admin', authenticated, authenticatedAdmin, admin)
 router.use('/cafes', authenticated, authenticatedUser, cafes)
 router.use('/favorites', authenticated, authenticatedUser, favorites)
 router.use('/reservations', authenticated, authenticatedUser, reservations)

@@ -15,6 +15,11 @@ const favoriteController = {
         status: 'success',
         message: 'Unfavoriting successful!'
       }))
+  },
+  getFavoriteCafes: (req, res, next) => {
+    favoriteServices.getFavoriteCafes(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = favoriteController
