@@ -28,8 +28,46 @@ const timeServices = {
             defaults: { cafeId, timeslot: t } // Insert this value if the record doesn't exist.
           })
         })
-
         return Promise.all(timePromises)
+      })
+      .then(() => cb(null)
+      )
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  postTime: (req, cb) => {
+    const { cafeId, timeslot } = req.body
+    const userId = getUser(req).id
+    return Promise.all([
+      Cafe.findByPk(cafeId, { attributes: ['id', 'userId'] }),
+      Time.findOne({ where: { cafeId, timeslot } })
+    ])
+      .then(([cafe, time]) => {
+        if (!cafe) {
+          const error = new Error('The coffee shop does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        if (cafe.userId !== userId) {
+          const error = new Error("Only able to create timeslot for the logged-in user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        if (time) {
+          const error = new Error('Timeslot already exists!')
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return Time.create({ cafeId, timeslot })
       })
       .then(() => cb(null)
       )
