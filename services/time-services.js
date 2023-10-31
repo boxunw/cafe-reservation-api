@@ -99,11 +99,43 @@ const timeServices = {
         }
         return Time.findAll({
           where: { cafeId },
-          attribute: ['id', 'timeslot'],
+          attributes: ['id', 'timeslot'],
           order: [['timeslot', 'ASC']]
         })
       })
       .then(times => cb(null, times))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  deleteTime: (req, cb) => {
+    const timeId = req.params.id
+    const userId = getUser(req).id
+    return Time.findByPk(timeId, {
+      include: { model: Cafe, attributes: ['userId'] }
+    })
+      .then(time => {
+        if (!time) {
+          const error = new Error('Timeslot does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        if (time.Cafe.userId !== userId) {
+          const error = new Error("Only able to delete timeslot for the logged-in user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return time.destroy()
+      })
+      .then(() => cb(null)
+      )
       .catch(err => {
         if (err.isExpected) {
           return cb(err)

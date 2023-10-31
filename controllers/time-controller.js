@@ -54,6 +54,14 @@ const timeController = {
     timeServices.getTimes(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  deleteTime: (req, res, next) => {
+    timeServices.deleteTime(req, err => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Deletion successful!'
+      }))
   }
 }
 module.exports = timeController
