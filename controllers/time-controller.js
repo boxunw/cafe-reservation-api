@@ -49,6 +49,11 @@ const timeController = {
         status: 'succcess',
         message: 'Creation successful!'
       }))
+  },
+  getTimes: (req, res, next) => {
+    timeServices.getTimes(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = timeController
