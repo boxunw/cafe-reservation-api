@@ -83,6 +83,39 @@ const tableServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  getTables: (req, cb) => {
+    const { cafeId } = req.body
+    const userId = getUser(req).id
+    return Cafe.findByPk(cafeId, { attributes: ['id', 'userId'] })
+      .then(cafe => {
+        if (!cafe) {
+          const error = new Error('The coffee shop does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        if (cafe.userId !== userId) {
+          const error = new Error("Only able to get tables for the user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return Table.findAll({
+          where: { cafeId },
+          attributes: ['id', 'seat', 'count'],
+          order: [['seat', 'ASC']]
+        })
+      })
+      .then(tables => cb(null, tables))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 

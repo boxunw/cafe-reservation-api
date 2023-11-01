@@ -66,6 +66,11 @@ const tableController = {
         status: 'success',
         message: 'Creation successful!'
       }))
+  },
+  getTables: (req, res, next) => {
+    tableServices.getTables(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 
