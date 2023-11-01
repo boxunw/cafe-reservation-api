@@ -71,6 +71,20 @@ const tableController = {
     tableServices.getTables(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  putTable: (req, res, next) => {
+    const { count } = req.body
+    if (!count || count === '') {
+      const error = new Error('Table Count cannot be empty!')
+      error.statusCode = 422
+      throw error
+    }
+    tableServices.putTable(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        ...data
+      }))
   }
 }
 

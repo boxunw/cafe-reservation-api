@@ -116,6 +116,41 @@ const tableServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  putTable: (req, cb) => {
+    const tableId = req.params.id
+    const { count } = req.body
+    const userId = getUser(req).id
+    return Table.findByPk(tableId, {
+      include: { model: Cafe, attributes: ['userId'] }
+    })
+      .then(table => {
+        if (!table) {
+          const error = new Error('Seat type does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        if (table.Cafe.userId !== userId) {
+          const error = new Error("Only able to edit count for the user's own cafe seat!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return table.update({ count })
+      })
+      .then(newTable => {
+        const { Cafe, createdAt, updatedAt, ...data } = newTable.toJSON()
+        return cb(null, data)
+      })
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 
