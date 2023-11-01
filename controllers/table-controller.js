@@ -41,6 +41,31 @@ const tableController = {
         status: 'success',
         message: 'Creation successful!'
       }))
+  },
+  postTable: (req, res, next) => {
+    const { seat, count } = req.body
+    if (!seat || seat === '') {
+      const error = new Error('Seat type cannot be empty!')
+      error.statusCode = 422
+      throw error
+    }
+    if (!count || count === '') {
+      const error = new Error('Table Count cannot be empty!')
+      error.statusCode = 422
+      throw error
+    }
+    // Confirm that input seat is in the built-in seat list.
+    if (!seats.includes(seat)) {
+      const error = new Error('Input seat is not within the specified list!')
+      error.statusCode = 422
+      throw error
+    }
+    tableServices.postTable(req, err => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Creation successful!'
+      }))
   }
 }
 
