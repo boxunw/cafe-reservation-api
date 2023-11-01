@@ -38,7 +38,7 @@ const userController = {
   putAccount: (req, res, next) => {
     const userId = req.params.id
     if (Number(userId) !== getUser(req).id) {
-      const error = new Error("Only able to edit the logged-in user's own account!")
+      const error = new Error("Only able to edit the user's own account!")
       error.statusCode = 403
       throw error
     }
@@ -69,7 +69,7 @@ const userController = {
   getUser: (req, res, next) => {
     const userId = req.params.id
     if (Number(userId) !== getUser(req).id) {
-      const error = new Error("Only able to get the logged-in user's own account data!")
+      const error = new Error("Only able to get the user's own account data!")
       error.statusCode = 403
       throw error
     }

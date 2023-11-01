@@ -17,7 +17,7 @@ const timeServices = {
           throw error
         }
         if (cafe.userId !== userId) {
-          const error = new Error("Only able to create timeslots for the logged-in user's own cafe!")
+          const error = new Error("Only able to create timeslots for the user's own cafe!")
           error.statusCode = 403
           error.isExpected = true
           throw error
@@ -56,7 +56,7 @@ const timeServices = {
           throw error
         }
         if (cafe.userId !== userId) {
-          const error = new Error("Only able to create timeslot for the logged-in user's own cafe!")
+          const error = new Error("Only able to create timeslot for the user's own cafe!")
           error.statusCode = 403
           error.isExpected = true
           throw error
@@ -92,7 +92,7 @@ const timeServices = {
           throw error
         }
         if (cafe.userId !== userId) {
-          const error = new Error("Only able to get timeslots for the logged-in user's own cafe!")
+          const error = new Error("Only able to get timeslots for the user's own cafe!")
           error.statusCode = 403
           error.isExpected = true
           throw error
@@ -127,7 +127,7 @@ const timeServices = {
           throw error
         }
         if (time.Cafe.userId !== userId) {
-          const error = new Error("Only able to delete timeslot for the logged-in user's own cafe!")
+          const error = new Error("Only able to delete timeslot for the user's own cafe!")
           error.statusCode = 403
           error.isExpected = true
           throw error
