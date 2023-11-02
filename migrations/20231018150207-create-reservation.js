@@ -9,14 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      cafe_id: {
         type: Sequelize.INTEGER
       },
-      table_id: {
+      user_id: {
         type: Sequelize.INTEGER
       },
       date: {
         type: Sequelize.STRING
+      },
+      timeslot: {
+        type: Sequelize.STRING
+      },
+      seat: {
+        type: Sequelize.INTEGER
       },
       tel: {
         type: Sequelize.STRING

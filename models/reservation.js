@@ -9,15 +9,17 @@ module.exports = (sequelize, DataTypes) => {
       Reservation.belongsTo(models.User, {
         foreignKey: 'userId'
       })
-      Reservation.belongsTo(models.Table, {
-        foreignKey: 'tableId'
+      Reservation.belongsTo(models.Cafe, {
+        foreignKey: 'cafeId'
       })
     }
   }
   Reservation.init({
+    cafeId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
-    tableId: DataTypes.INTEGER,
     date: DataTypes.STRING,
+    timeslot: DataTypes.STRING,
+    seat: DataTypes.INTEGER,
     tel: DataTypes.STRING,
     note: DataTypes.TEXT
   }, {

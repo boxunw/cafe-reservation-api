@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       Table.belongsTo(models.Cafe, {
         foreignKey: 'cafeId'
       })
-      Table.hasMany(models.Reservation, {
-        foreignKey: 'tableId'
-      })
     }
   }
   Table.init({
