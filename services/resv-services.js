@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { Time, Table, Cafe, Reservation } = require('../models')
 const { getUser } = require('../helpers/auth-helper')
 const resvServices = {
@@ -68,6 +69,37 @@ const resvServices = {
         if (err.isExpected) {
           return cb(err)
         }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  getResvs: (req, cb) => {
+    const userId = getUser(req).id
+    const today = new Date().toISOString().slice(0, 10)
+    return Reservation.findAll({
+      where: {
+        userId,
+        // Only reservation information for dates starting from today will be retrieved
+        date: { [Op.gte]: today }
+      },
+      order: [['date', 'ASC']],
+      include: { model: Cafe, attributes: ['name'] }
+    })
+      .then(resvs => {
+        const data = resvs.map(resv => ({
+          id: resv.id,
+          cafeId: resv.cafeId,
+          cafe: resv.Cafe.name,
+          date: resv.date,
+          timeslot: resv.timeslot,
+          seat: resv.seat,
+          tel: resv.tel,
+          note: resv.note
+        }))
+        return cb(null, data)
+      })
+      .catch(err => {
         console.error(err.message)
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
