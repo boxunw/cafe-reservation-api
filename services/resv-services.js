@@ -10,12 +10,13 @@ const resvServices = {
         where: { cafeId, seat },
         include: { model: Cafe, attributes: ['name'] }
       }),
+      Reservation.findOne({ where: { cafeId, userId, date, timeslot } }),
       Reservation.findAll({
         where: { cafeId, date, timeslot, seat },
         attributes: ['id']
       })
     ])
-      .then(([time, table, resvs]) => {
+      .then(([time, table, userResv, resvs]) => {
         if (!time) {
           const error = new Error('The cafe is not available for booking during this timeslot!')
           error.statusCode = 422
@@ -28,8 +29,14 @@ const resvServices = {
           error.isExpected = true
           throw error
         }
+        if (userResv) {
+          const error = new Error('You already have a reservation for that timeslot!')
+          error.statusCode = 409
+          error.isExpected = true
+          throw error
+        }
         if (resvs.length >= table.count) {
-          const error = new Error('This seat type has no available tables for reservation!')
+          const error = new Error('This seat has no available tables!')
           error.statusCode = 422
           error.isExpected = true
           throw error
@@ -51,7 +58,7 @@ const resvServices = {
         ])
       })
       .then(([table, newResv]) => {
-        const { id, createdAt, updatedAt, ...data } = newResv.toJSON()
+        const { id, cafeId, userId, createdAt, updatedAt, ...data } = newResv.toJSON()
         return cb(null, {
           cafe: table.Cafe.name,
           ...data
