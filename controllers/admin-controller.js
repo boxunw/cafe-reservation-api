@@ -4,6 +4,14 @@ const adminController = {
     adminServices.getCafes(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  deleteOldResvs: (req, res, next) => {
+    adminServices.deleteOldResvs(req, err => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Deletion successful!'
+      }))
   }
 }
 module.exports = adminController
