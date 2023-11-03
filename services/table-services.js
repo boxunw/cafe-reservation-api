@@ -85,7 +85,7 @@ const tableServices = {
       })
   },
   getTables: (req, cb) => {
-    const { cafeId } = req.body
+    const cafeId = req.params.cafeId
     const userId = getUser(req).id
     return Cafe.findByPk(cafeId, { attributes: ['id', 'userId'] })
       .then(cafe => {
