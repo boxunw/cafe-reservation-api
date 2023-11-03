@@ -30,6 +30,11 @@ const resvController = {
     resvServices.getResvs(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  getCafeResvs: (req, res, next) => {
+    resvServices.getCafeResvs(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = resvController

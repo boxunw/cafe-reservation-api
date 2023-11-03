@@ -1,5 +1,5 @@
 const { Op } = require('sequelize')
-const { Time, Table, Cafe, Reservation } = require('../models')
+const { Time, Table, Cafe, Reservation, User } = require('../models')
 const { getUser } = require('../helpers/auth-helper')
 const resvServices = {
   postResv: (req, cb) => {
@@ -83,7 +83,7 @@ const resvServices = {
         // Only reservation information for dates starting from today will be retrieved
         date: { [Op.gte]: today }
       },
-      order: [['date', 'ASC']],
+      order: [['date', 'ASC'], ['timeslot', 'ASC'], ['seat', 'ASC']],
       include: { model: Cafe, attributes: ['name'] }
     })
       .then(resvs => {
@@ -100,6 +100,54 @@ const resvServices = {
         return cb(null, data)
       })
       .catch(err => {
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
+  },
+  getCafeResvs: (req, cb) => {
+    const cafeId = req.params.cafeId
+    const userId = getUser(req).id
+    const today = new Date().toISOString().slice(0, 10)
+    return Promise.all([
+      Cafe.findByPk(cafeId, { attributes: ['userId'] }),
+      Reservation.findAll({
+        where: {
+          cafeId,
+          // Only reservation information for dates starting from today will be retrieved
+          date: { [Op.gte]: today }
+        },
+        order: [['date', 'ASC'], ['timeslot', 'ASC'], ['seat', 'ASC']],
+        include: [
+          { model: Cafe, attributes: ['name'] },
+          { model: User, attributes: ['name', 'email'] }
+        ]
+      })
+    ])
+      .then(([cafe, resvs]) => {
+        if (cafe.userId !== userId) {
+          const error = new Error("Only able to get reservations for the user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        const data = resvs.map(resv => ({
+          id: resv.id,
+          cafe: resv.Cafe.name,
+          customer: resv.User.name,
+          email: resv.User.email,
+          date: resv.date,
+          timeslot: resv.timeslot,
+          seat: resv.seat,
+          tel: resv.tel,
+          note: resv.note
+        }))
+        return cb(null, data)
+      })
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
         console.error(err.message)
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
