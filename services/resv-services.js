@@ -152,6 +152,31 @@ const resvServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  deleteResv: (req, cb) => {
+    const resvId = req.params.id
+    const userId = getUser(req).id
+    return Reservation.findByPk(resvId, {
+      include: { model: Cafe, attributes: ['userId'] }
+    })
+      .then(resv => {
+        if (resv.Cafe.userId !== userId) {
+          const error = new Error("Only able to delete reservation for the user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return resv.destroy()
+      })
+      .then(() => cb(null))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = resvServices

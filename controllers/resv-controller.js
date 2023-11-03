@@ -35,6 +35,14 @@ const resvController = {
     resvServices.getCafeResvs(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  deleteResv: (req, res, next) => {
+    resvServices.deleteResv(req, err => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Deletion successful!'
+      }))
   }
 }
 module.exports = resvController
