@@ -82,6 +82,11 @@ const cafeController = {
     cafeServices.getOwnCafes(req, (err, data) => err
       ? next(err)
       : res.json(data))
+  },
+  postSearch: (req, res, next) => {
+    cafeServices.postSearch(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
   }
 }
 module.exports = cafeController
