@@ -12,6 +12,14 @@ const adminController = {
         status: 'success',
         message: 'Deletion successful!'
       }))
+  },
+  deleteCafe: (req, res, next) => {
+    adminServices.deleteCafe(req, err => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Deletion successful!'
+      }))
   }
 }
 module.exports = adminController
