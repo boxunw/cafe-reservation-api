@@ -82,18 +82,11 @@ const timeServices = {
   },
   getTimes: (req, cb) => {
     const cafeId = req.params.cafeId
-    const userId = getUser(req).id
-    return Cafe.findByPk(cafeId, { attributes: ['id', 'userId'] })
+    return Cafe.findByPk(cafeId, { attributes: ['id'] })
       .then(cafe => {
         if (!cafe) {
           const error = new Error('The coffee shop does not exist!')
           error.statusCode = 404
-          error.isExpected = true
-          throw error
-        }
-        if (cafe.userId !== userId) {
-          const error = new Error("Only able to get timeslots for the user's own cafe!")
-          error.statusCode = 403
           error.isExpected = true
           throw error
         }

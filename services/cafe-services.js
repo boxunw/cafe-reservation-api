@@ -266,6 +266,69 @@ const cafeServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  postEmptyTime: (req, cb) => {
+    const cafeId = req.params.id
+    const { seat } = req.body
+    // create 7 days arrays from start date
+    const startDate = new Date(req.body.startDate) // Convert the date string to a date object
+    const dates = []
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(startDate) // copy startDate to currentDate
+      currentDate.setDate(startDate.getDate() + i) // Add i days
+      const year = currentDate.getFullYear()
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0') // Month needs zero-padding
+      const day = currentDate.getDate().toString().padStart(2, '0') // Day needs zero-padding
+      const formattedDate = `${year}-${month}-${day}`
+      dates.push(formattedDate)
+    }
+    return Promise.all([
+      Table.findOne({
+        where: { cafeId, seat },
+        include: {
+          model: Cafe,
+          attributes: ['id'],
+          include: { model: Time }
+        }
+      }),
+      Reservation.findAll({
+        where: { cafeId, seat },
+        attributes: ['date', 'timeslot']
+      })
+    ])
+      .then(([table, reservations]) => {
+        if (!table) {
+          const error = new Error('The coffee shop does not have this seat type!')
+          error.statusCode = 422
+          error.isExpected = true
+          throw error
+        }
+        const cafeTimeslots = table.Cafe.Times.map(t => t.timeslot)
+        cafeTimeslots.sort()
+        const replyData = dates.map(date => {
+          const timeslots = []
+          // filter the available dates and timeslots from the number of reservations
+          cafeTimeslots.forEach(t => {
+            const reservationsCount = reservations.filter(r => r.date === date && r.timeslot === t).length // the number of reservations filtered by the cafe/seat/date/timeslot
+            if (reservationsCount < table.count) {
+              timeslots.push(t)
+            }
+          })
+          return {
+            date,
+            timeslots
+          }
+        })
+        return cb(null, replyData)
+      })
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 module.exports = cafeServices

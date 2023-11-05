@@ -84,7 +84,26 @@ const cafeController = {
       : res.json(data))
   },
   postSearch: (req, res, next) => {
+    const { date } = req.body
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/
+    if (!datePattern.test(date)) {
+      const error = new Error("The date format should be in the format 'xxxx-xx-xx'!")
+      error.statusCode = 400
+      throw error
+    }
     cafeServices.postSearch(req, (err, data) => err
+      ? next(err)
+      : res.json(data))
+  },
+  postEmptyTime: (req, res, next) => {
+    const { startDate } = req.body
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/
+    if (!datePattern.test(startDate)) {
+      const error = new Error("The startDate format should be in the format 'xxxx-xx-xx'!")
+      error.statusCode = 400
+      throw error
+    }
+    cafeServices.postEmptyTime(req, (err, data) => err
       ? next(err)
       : res.json(data))
   }
