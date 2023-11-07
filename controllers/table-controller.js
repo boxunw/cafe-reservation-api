@@ -23,8 +23,8 @@ const tableController = {
         error.statusCode = 422
         throw error
       }
-      if (!table.count || table.count === '') {
-        const error = new Error('Table Count cannot be empty!')
+      if (!table.count || table.count === '' || Number(table.count) === 0) {
+        const error = new Error('Table Count cannot be empty or zero!')
         error.statusCode = 422
         throw error
       }
@@ -49,8 +49,8 @@ const tableController = {
       error.statusCode = 422
       throw error
     }
-    if (!count || count === '') {
-      const error = new Error('Table Count cannot be empty!')
+    if (!count || count === '' || Number(count) === 0) {
+      const error = new Error('Table Count cannot be empty or zero!')
       error.statusCode = 422
       throw error
     }
@@ -74,8 +74,8 @@ const tableController = {
   },
   putTable: (req, res, next) => {
     const { count } = req.body
-    if (!count || count === '') {
-      const error = new Error('Table Count cannot be empty!')
+    if (!count || count === '' || Number(count) === 0) {
+      const error = new Error('Table Count cannot be empty or zero!')
       error.statusCode = 422
       throw error
     }
@@ -84,6 +84,14 @@ const tableController = {
       : res.json({
         status: 'success',
         ...data
+      }))
+  },
+  deleteTable: (req, res, next) => {
+    tableServices.deleteTable(req, (err, data) => err
+      ? next(err)
+      : res.json({
+        status: 'success',
+        message: 'Deletion successful!'
       }))
   }
 }

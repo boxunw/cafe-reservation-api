@@ -144,6 +144,37 @@ const tableServices = {
         const genericError = new Error('An internal server error occurred!')
         return cb(genericError)
       })
+  },
+  deleteTable: (req, cb) => {
+    const tableId = req.params.id
+    const userId = getUser(req).id
+    return Table.findByPk(tableId, {
+      include: { model: Cafe, attributes: ['userId'] }
+    })
+      .then(table => {
+        if (!table) {
+          const error = new Error('Seat type does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
+        if (table.Cafe.userId !== userId) {
+          const error = new Error("Only able to delete seat type for the user's own cafe!")
+          error.statusCode = 403
+          error.isExpected = true
+          throw error
+        }
+        return table.destroy()
+      })
+      .then(() => cb(null))
+      .catch(err => {
+        if (err.isExpected) {
+          return cb(err)
+        }
+        console.error(err.message)
+        const genericError = new Error('An internal server error occurred!')
+        return cb(genericError)
+      })
   }
 }
 
