@@ -149,7 +149,7 @@ const cafeServices = {
   getCafe: (req, cb) => {
     const cafeId = req.params.id
     return Cafe.findByPk(cafeId, {
-      attributes: ['id', 'name', 'cover', 'cover', 'description', 'address', 'tel', 'menu1', 'menu2', 'menu3', 'menu4', 'menu5'],
+      attributes: ['id', 'name', 'cover', 'intro', 'description', 'address', 'tel', 'menu1', 'menu2', 'menu3', 'menu4', 'menu5'],
       include: [City, { model: User, as: 'FavoritedUsers' }]
     })
       .then(cafe => {
