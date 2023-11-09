@@ -46,7 +46,7 @@ const timeController = {
     timeServices.postTime(req, err => err
       ? next(err)
       : res.json({
-        status: 'succcess',
+        status: 'success',
         message: 'Creation successful!'
       }))
   },
