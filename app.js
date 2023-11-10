@@ -13,7 +13,8 @@ const port = process.env.PORT || 3000
 // set CORS
 const corsOptions = {
   origin: [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://james-lee-01.github.io/reserve/'
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization']
