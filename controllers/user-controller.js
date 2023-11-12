@@ -3,6 +3,7 @@ const { getUser } = require('../helpers/auth-helper')
 const userController = {
   signUp: (req, res, next) => {
     const { name, email, password, checkPassword } = req.body
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!name || !email || !password) {
       const error = new Error('Name, email, and password cannot be empty!')
       error.statusCode = 400
@@ -11,6 +12,11 @@ const userController = {
     if (name.length > 50) {
       const error = new Error('The name exceeds the maximum character limit of 50!')
       error.statusCode = 422
+      throw error
+    }
+    if (!emailPattern.test(email)) {
+      const error = new Error('Invalid email format!')
+      error.statusCode = 400
       throw error
     }
     if (password !== checkPassword) {
@@ -43,6 +49,7 @@ const userController = {
       throw error
     }
     const { name, email, password, checkPassword } = req.body
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!name || !email) {
       const error = new Error('Name and email cannot be empty!')
       error.statusCode = 400
@@ -51,6 +58,11 @@ const userController = {
     if (name.length > 50) {
       const error = new Error('The name exceeds the maximum character limit of 50!')
       error.statusCode = 422
+      throw error
+    }
+    if (!emailPattern.test(email)) {
+      const error = new Error('Invalid email format!')
+      error.statusCode = 400
       throw error
     }
     if (password !== checkPassword) {
