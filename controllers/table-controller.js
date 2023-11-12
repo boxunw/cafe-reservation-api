@@ -18,12 +18,12 @@ const tableController = {
       throw error
     }
     tables.forEach(table => {
-      if (!table.seat || table.seat === '') {
-        const error = new Error('Seat type cannot be empty!')
+      if (!table.seat || Number(table.seat) === 0) {
+        const error = new Error('Seat type cannot be empty or zero!')
         error.statusCode = 422
         throw error
       }
-      if (!table.count || table.count === '' || Number(table.count) === 0) {
+      if (!table.count || Number(table.count) === 0) {
         const error = new Error('Table Count cannot be empty or zero!')
         error.statusCode = 422
         throw error
@@ -44,12 +44,12 @@ const tableController = {
   },
   postTable: (req, res, next) => {
     const { seat, count } = req.body
-    if (!seat || seat === '') {
-      const error = new Error('Seat type cannot be empty!')
+    if (!seat || Number(seat) === 0) {
+      const error = new Error('Seat type cannot be empty or zero!')
       error.statusCode = 422
       throw error
     }
-    if (!count || count === '' || Number(count) === 0) {
+    if (!count || Number(count) === 0) {
       const error = new Error('Table Count cannot be empty or zero!')
       error.statusCode = 422
       throw error
@@ -74,7 +74,7 @@ const tableController = {
   },
   putTable: (req, res, next) => {
     const { count } = req.body
-    if (!count || count === '' || Number(count) === 0) {
+    if (!count || Number(count) === 0) {
       const error = new Error('Table Count cannot be empty or zero!')
       error.statusCode = 422
       throw error
