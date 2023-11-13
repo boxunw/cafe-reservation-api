@@ -13,7 +13,7 @@ module.exports = {
     )
     const cafeData = []
     users.forEach(user => {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 6; i++) {
         cafeData.push({
           user_id: user.id,
           city_id: cities[Math.floor(Math.random() * cities.length)].id,
