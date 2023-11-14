@@ -10,7 +10,7 @@ const userController = {
       throw error
     }
     if (name.length > 20) {
-      const error = new Error('The name exceeds the maximum character limit of 50!')
+      const error = new Error('The name exceeds the maximum character limit of 20!')
       error.statusCode = 422
       throw error
     }
@@ -56,7 +56,7 @@ const userController = {
       throw error
     }
     if (name.length > 20) {
-      const error = new Error('The name exceeds the maximum character limit of 50!')
+      const error = new Error('The name exceeds the maximum character limit of 20!')
       error.statusCode = 422
       throw error
     }
