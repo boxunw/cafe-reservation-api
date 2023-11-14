@@ -76,7 +76,10 @@ const favoriteServices = {
         model: Cafe,
         as: 'FavoritedCafes',
         attributes: ['id', 'name', 'cover', 'intro'],
-        order: [['createdAt', 'DESC']],
+        order: [
+          ['createdAt', 'DESC'],
+          ['name', 'ASC']
+        ],
         include: { model: City }
       }]
     })
