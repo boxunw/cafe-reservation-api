@@ -38,7 +38,7 @@ const userServices = {
   login: (req, cb) => {
     try {
       const { password, ...userData } = getUser(req).toJSON()
-      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
+      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '3d' })
       userData.token = token
       return cb(null, userData)
     } catch (err) {
