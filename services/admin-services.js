@@ -10,7 +10,8 @@ const adminServices = {
       ],
       order: [
         [User, 'name', 'ASC'],
-        ['createdAt', 'DESC']
+        ['createdAt', 'DESC'],
+        ['name', 'ASC']
       ],
       raw: true,
       nest: true

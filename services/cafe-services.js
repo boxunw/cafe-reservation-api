@@ -126,7 +126,10 @@ const cafeServices = {
     return Cafe.findAll({
       attributes: ['id', 'name', 'cover', 'intro'],
       include: City,
-      order: [['createdAt', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        ['name', 'ASC']
+      ],
       raw: true,
       nest: true
     })
@@ -183,7 +186,10 @@ const cafeServices = {
       where: { userId },
       attributes: ['id', 'name', 'cover', 'intro'],
       include: City,
-      order: [['createdAt', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        ['name', 'ASC']
+      ],
       raw: true,
       nest: true
     })
@@ -218,7 +224,10 @@ const cafeServices = {
           attributes: ['id', 'name', 'cover', 'intro'],
           include: [{ model: City }, { model: Time }]
         },
-        order: [[Cafe, 'createdAt', 'DESC']]
+        order: [
+          [Cafe, 'createdAt', 'DESC'],
+          [Cafe, 'name', 'ASC']
+        ]
       }),
       Reservation.findAll({ where: { date, timeslot, seat } })
     ])
