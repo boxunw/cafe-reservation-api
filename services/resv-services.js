@@ -160,6 +160,12 @@ const resvServices = {
       include: { model: Cafe, attributes: ['userId'] }
     })
       .then(resv => {
+        if (!resv) {
+          const error = new Error('Reservation does not exist!')
+          error.statusCode = 404
+          error.isExpected = true
+          throw error
+        }
         if (resv.Cafe.userId !== userId) {
           const error = new Error("Only able to delete reservation for the user's own cafe!")
           error.statusCode = 403
