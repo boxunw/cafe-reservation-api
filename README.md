@@ -3,7 +3,7 @@
 - 本專案採用前後分離的開發模式，並透過 RESTful 風格進行設計
   - [前端 repo](https://github.com/James-Lee-01/reserve)
 ## Website - 網站展示
-- [Cafe Reservation](https://james-lee-01.github.io/reserve)
+- [咖啡廳訂位網站 Cafe Reservation](https://james-lee-01.github.io/reserve)
 - [正向流程 Demo](https://youtu.be/DrG0Fo3U5aQ)
 - 共用帳號：
   - 使用者1：
