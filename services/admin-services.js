@@ -86,7 +86,7 @@ const adminServices = {
       }
       console.error(err.message)
       const genericError = new Error('An internal server error occurred!')
-      return cb(genericError)
+      cb(genericError)
     }
   }
 }

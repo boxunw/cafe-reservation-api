@@ -47,54 +47,48 @@ const userServices = {
       return cb(genericError)
     }
   },
-  putAccount: (req, cb) => {
+  putAccount: async (req, cb) => {
     const userId = req.params.id
     const { name, email, password } = req.body
-    return User.findByPk(userId)
-      .then(async user => {
-        if (!user) {
-          const error = new Error('Account does not exist!')
-          error.statusCode = 404
-          error.isExpected = true
-          throw error
+    try {
+      const user = await User.findByPk(userId)
+      if (!user) {
+        const error = new Error('Account does not exist!')
+        error.statusCode = 404
+        error.isExpected = true
+        throw error
+      }
+      const user1 = await User.findOne({
+        where: {
+          [Op.and]: [
+            { email },
+            { id: { [Op.ne]: userId } }
+          ]
         }
-        const user1 = await User.findOne({
-          where: {
-            [Op.and]: [
-              { email },
-              { id: { [Op.ne]: userId } }
-            ]
-          }
-        })
-        return [user, user1]
       })
-      .then(([user, user1]) => {
-        if (user1) {
-          const error = new Error('The email has already been registered!')
-          error.statusCode = 409
-          error.isExpected = true
-          throw error
-        }
-        return user.update({
-          name,
-          email,
-          password: password ? bcrypt.hashSync(password, 10) : user.password
-        })
+      if (user1) {
+        const error = new Error('The email has already been registered!')
+        error.statusCode = 409
+        error.isExpected = true
+        throw error
+      }
+      const updatedUser = await user.update({
+        name,
+        email,
+        password: password ? bcrypt.hashSync(password, 10) : user.password
       })
-      .then(user => {
-        user = user.toJSON()
-        delete user.password
-        delete user.role
-        return cb(null, user)
-      })
-      .catch(err => {
-        if (err.isExpected) {
-          return cb(err)
-        }
-        console.error(err.message)
-        const genericError = new Error('An internal server error occurred!')
-        return cb(genericError)
-      })
+      const responseUser = updatedUser.toJSON()
+      delete responseUser.password
+      delete responseUser.role
+      cb(null, responseUser)
+    } catch (err) {
+      if (err.isExpected) {
+        return cb(err)
+      }
+      console.error(err.message)
+      const genericError = new Error('An internal server error occurred!')
+      cb(genericError)
+    }
   },
   getUser: (req, cb) => {
     const userId = req.params.id
