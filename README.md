@@ -1,10 +1,10 @@
 # 咖啡廳訂位系統 Cafe Reservation API
 - 這是一個提供咖啡廳訂位系統後端 API 的應用程式。使用者經身份驗證後，可探索並收藏喜愛的咖啡廳。系統支援根據特定日期、時段和人數的條件篩選並預訂座位。店家則可瀏覽和管理顧客訂位資料，實現顧客與店家雙向交流。
 - 本專案採用前後分離的開發模式，並透過 RESTful 風格進行設計
-  - [前端 repo](https://github.com/James-Lee-01/reserve)
 ## Website - 網站展示
-- [Cafe Reservation](https://james-lee-01.github.io/reserve)
+- [咖啡廳訂位網站 Cafe Reservation](https://james-lee-01.github.io/reserve)
 - [正向流程 Demo](https://youtu.be/DrG0Fo3U5aQ)
+- [前端 repo](https://github.com/James-Lee-01/reserve)
 - 共用帳號：
   - 使用者1：
     ```
@@ -42,7 +42,7 @@
 - 後台管理者可以一鍵清除今日之前舊的訂位資料
 ## API Document - API 文件
 該應用程式目前佈署至 Heroku，總共 33 支 API
-[API List](https://documenter.getpostman.com/view/29236995/2s9YRCWB94)
+- [API List](https://documenter.getpostman.com/view/29236995/2s9YRCWB94)
 ## Environment SetUp - 環境建置
 1. [Node.js](https://nodejs.org/en)
 2. [MySQL](https://dev.mysql.com/downloads/mysql/)
